@@ -27,6 +27,29 @@ jobs:
       - uses: actions/checkout@v4
       - run: docker run --rm -v "$PWD:/src" aquasec/trivy fs --exit-code 1 --severity CRITICAL /src
 
+  # sbom:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - run: docker run --rm -v "$PWD:/src" 
+
+  sbom:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: >
+          docker run --rm
+          -v "$PWD:/src"
+          anchore/syft:latest
+          /
+          -o cyclonedx-json=/sbom.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.json
+
   # A compléter pendant l'atelier 2 :
   #  - build de l'image + scan de l'image (Trivy)
   #  - SBOM (Syft) publié comme artefact
