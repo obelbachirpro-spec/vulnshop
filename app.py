@@ -40,8 +40,10 @@ def home():
 def find_user():
     email = request.args.get("email", "")
     # FAILLE VOLONTAIRE (A05 Injection) : requête construite par concaténation.
-    query = "SELECT id, email, name FROM users WHERE email = '" + email + "'"
-    rows = db().execute(query).fetchall()
+    # query = "SELECT id, email, name FROM users WHERE email = '" + email + "'"
+    query = "SELECT id, email, name FROM users WHERE email = ?"
+    # rows = db().execute(query).fetchall()
+    rows = db().execute(query, (email,)).fetchall()
     return jsonify([dict(r) for r in rows])
 
 
@@ -56,4 +58,4 @@ def get_order(order_id):
 
 if __name__ == "__main__":
     init_db()
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="127.0.0.1", port=5000)
