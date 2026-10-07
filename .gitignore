@@ -10,3 +10,4 @@ sbom.json
 cosign.key
 cosign.pub
 *.sig
+.env
